@@ -1,3 +1,4 @@
+from os import path
 from re import match
 from re import split as re_spl
 from re import findall as re_find
@@ -71,6 +72,9 @@ class FileManager:
     def set_json_file(self, file, any):
         with open(f'{self.base_path}{file}.json', 'w') as jsonFile:
             jsonFile.write(dumps(any))
+    
+    def join(self, *_subpaths):
+        return path.join(self.base_path, *_subpaths)
 
 
 def merge_lists(lists):
@@ -102,6 +106,8 @@ def func_filter(_str, entity):
     padrao = r'(?:==|!=|>=|<=|>|<)+'
     try:
         chave, valor = re_spl(padrao, _str, maxsplit=1)
+        if len(valor) != 10:
+            return eval(f'entity.{_str}')
         obj_date = dtu_parse(valor)
         match re_find(padrao, _str)[0]:
             case '==':
